@@ -42,6 +42,11 @@ namespace InsertDatafromWebPageToDatabase
             {
                 OutputLabel.Text = "Failed to Save ";
             }
+            NameText.Text = "";
+            AgeText.Text = "";
+            RegText.Text = "";
+            AddressText.Text = "";
+            DeptText.Text = "";
         }
     }
 }
