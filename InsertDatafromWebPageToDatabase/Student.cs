@@ -10,7 +10,7 @@ namespace InsertDatafromWebPageToDatabase
         public int StudentID { get; set; }
         public string RegNo { get; set; }
         public string Name { get; set; }
-        public int age { get; set; }
+        public int Age { get; set; }
         public string Depertment { get; set; }
         public string Address { get; set; }
     }
