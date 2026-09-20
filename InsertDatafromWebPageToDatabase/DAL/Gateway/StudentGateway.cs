@@ -1,33 +1,16 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Data;
-using System.Data.Common;
 using System.Data.SqlClient;
 using System.Linq;
 using System.Web;
-using System.Web.UI;
-using System.Web.UI.WebControls;
 
-namespace InsertDatafromWebPageToDatabase
+namespace InsertDatafromWebPageToDatabase.DAL.Gateway
 {
-    public partial class IndexUI : System.Web.UI.Page
+    public class StudentGateway
     {
-        protected void Page_Load(object sender, EventArgs e)
+        public int SaveStudent(Student student)
         {
-            
-                LoadStudents();
-            
-            
-        }
-
-        protected void SaveButton_Click(object sender, EventArgs e)
-        {
-            Student student = new Student();
-            student.Name = NameText.Text;
-            student.Age = Convert.ToInt32(AgeText.Text);
-            student.Depertment = DeptText.Text;
-            student.RegNo = RegText.Text;
-            student.Address = AddressText.Text;
             string conString = "server=.;database=StudentDBTest;integrated security=true";
             SqlConnection connection = new SqlConnection(conString);
             string insertQuery = @"insert into Students (Name,RegistrationNumber,Depertment,Age,Address) Values (@Name,@RegistrationNumber,@Depertment,@Age,@Address)";
@@ -39,26 +22,14 @@ namespace InsertDatafromWebPageToDatabase
             cmd.Parameters.AddWithValue("@Address", student.Address);
             connection.Open();
             int res = cmd.ExecuteNonQuery();
-            if (res>0)
-            {
-                OutputLabel.Text = "Save Successfully";
-            }
-            else
-            {
-                OutputLabel.Text = "Failed to Save ";
-            }
-            NameText.Text = "";
-            AgeText.Text = "";
-            RegText.Text = "";
-            AddressText.Text = "";
-            DeptText.Text = "";
-            LoadStudents();
+            connection.Close();
+            return res;
         }
-
-        private void LoadStudents ()
+        public DataTable GetAllStudents()
         {
             string conString = "server=.;database=StudentDBTest;integrated security=true";
-            using (SqlConnection connection = new SqlConnection(conString)) {
+            using (SqlConnection connection = new SqlConnection(conString))
+            {
                 string query = @"SELECT StudentID,
                                     Name,
                                     RegistrationNumber,
@@ -66,12 +37,11 @@ namespace InsertDatafromWebPageToDatabase
                                     Age,
                                     Address
                              FROM Students";
-                SqlDataAdapter da = new SqlDataAdapter(query,connection);
+                SqlDataAdapter da = new SqlDataAdapter(query, connection);
                 DataTable dt = new DataTable();
                 da.Fill(dt);
-                StudentGridView.DataSource = dt;
-                StudentGridView.DataBind();
+                return dt;
             }
-        } 
+        }
     }
 }
