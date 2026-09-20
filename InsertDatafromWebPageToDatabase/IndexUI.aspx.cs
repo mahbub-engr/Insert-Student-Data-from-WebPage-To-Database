@@ -1,5 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Data;
+using System.Data.Common;
 using System.Data.SqlClient;
 using System.Linq;
 using System.Web;
@@ -12,7 +14,10 @@ namespace InsertDatafromWebPageToDatabase
     {
         protected void Page_Load(object sender, EventArgs e)
         {
-
+            
+                LoadStudents();
+            
+            
         }
 
         protected void SaveButton_Click(object sender, EventArgs e)
@@ -22,7 +27,7 @@ namespace InsertDatafromWebPageToDatabase
             student.Age = Convert.ToInt32(AgeText.Text);
             student.Depertment = DeptText.Text;
             student.RegNo = RegText.Text;
-            student.Address = Address.Text;
+            student.Address = AddressText.Text;
             string conString = "server=.;database=StudentDBTest;integrated security=true";
             SqlConnection connection = new SqlConnection(conString);
             string insertQuery = @"insert into Students (Name,RegistrationNumber,Depertment,Age,Address) Values (@Name,@RegistrationNumber,@Depertment,@Age,@Address)";
@@ -47,6 +52,26 @@ namespace InsertDatafromWebPageToDatabase
             RegText.Text = "";
             AddressText.Text = "";
             DeptText.Text = "";
+            LoadStudents();
         }
+
+        private void LoadStudents ()
+        {
+            string conString = "server=.;database=StudentDBTest;integrated security=true";
+            using (SqlConnection connection = new SqlConnection(conString)) {
+                string query = @"SELECT StudentID,
+                                    Name,
+                                    RegistrationNumber,
+                                    Depertment,
+                                    Age,
+                                    Address
+                             FROM Students";
+                SqlDataAdapter da = new SqlDataAdapter(query,connection);
+                DataTable dt = new DataTable();
+                da.Fill(dt);
+                StudentGridView.DataSource = dt;
+                StudentGridView.DataBind();
+            }
+        } 
     }
 }
