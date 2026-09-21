@@ -16,21 +16,39 @@ namespace InsertDatafromWebPageToDatabase
         StudentManager studentManager = new StudentManager();
         protected void Page_Load(object sender, EventArgs e)
         {
-                LoadStudents();          
+            //if (!IsPostBack)
+            //{
+            //    LoadStudents();
+            //}
         }
 
         protected void SaveButton_Click(object sender, EventArgs e)
         {
+            if (!int.TryParse(AgeText.Text.Trim(),out int ParsedAge))
+            {
+                OutputLabel.Text = "Pleace enter valid age";
+                return;
+            }
             Student student = new Student();
-            student.Name = NameText.Text;
-            student.Age = Convert.ToInt32(AgeText.Text);
-            student.Depertment = DeptText.Text;
+            student.Name = NameText.Text.Trim();
+            student.Age = ParsedAge;
+            student.Department = DeptText.Text;
             student.RegNo = RegText.Text;
             student.Address = AddressText.Text;
             
-           OutputLabel.Text=studentManager.SaveStudent(student);
-            ClearForm();
-            LoadStudents();
+           string result=studentManager.SaveStudent(student);
+            if (int.TryParse(result,out int newStudentID))
+            {
+                StudentGridView.DataSource = studentManager.GetStudentById(newStudentID);
+                StudentGridView.DataBind();
+                ClearForm();
+            }
+            else
+            {
+                OutputLabel.Text = result;
+            }
+
+
         }
 
        private void ClearForm ()
@@ -46,5 +64,11 @@ namespace InsertDatafromWebPageToDatabase
             StudentGridView.DataSource = studentManager.GetAllStudents();
             StudentGridView.DataBind();
         }
+        //private void GetCreatedStudent()
+        //{
+        //    StudentGridView.DataSource = studentManager.GetAllStudents();
+        //    StudentGridView.DataBind();
+        //}
+
     }
 }
