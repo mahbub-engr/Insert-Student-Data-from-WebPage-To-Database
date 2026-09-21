@@ -9,38 +9,50 @@ namespace InsertDatafromWebPageToDatabase.DAL.Gateway
 {
     public class StudentGateway
     {
+        private string conString = "server=.;database=StudentDBTest;integrated security=true";
         public int SaveStudent(Student student)
         {
-            string conString = "server=.;database=StudentDBTest;integrated security=true";
+
             SqlConnection connection = new SqlConnection(conString);
-            string insertQuery = @"insert into Students (Name,RegistrationNumber,Depertment,Age,Address) Values (@Name,@RegistrationNumber,@Depertment,@Age,@Address)";
+            string insertQuery = "spAddStudent";
             SqlCommand cmd = new SqlCommand(insertQuery, connection);
-            cmd.Parameters.AddWithValue("@Name", student.Name);
-            cmd.Parameters.AddWithValue("@RegistrationNumber", student.RegNo);
-            cmd.Parameters.AddWithValue("@Depertment", student.Depertment);
-            cmd.Parameters.AddWithValue("@Age", student.Age);
-            cmd.Parameters.AddWithValue("@Address", student.Address);
+            cmd.CommandType = CommandType.StoredProcedure;
+            cmd.Parameters.AddWithValue("@Name",SqlDbType.NVarChar).Value=student.Name;
+            cmd.Parameters.AddWithValue("@RegistrationNumber", SqlDbType.NVarChar ).Value= student.RegNo;
+            cmd.Parameters.AddWithValue("@Department", SqlDbType.NVarChar).Value= student.Department;
+            cmd.Parameters.AddWithValue("@Age",SqlDbType.Int ).Value= student.Age;
+            cmd.Parameters.AddWithValue("@Address", SqlDbType.NVarChar ).Value= student.Address;
             connection.Open();
-            int res = cmd.ExecuteNonQuery();
+            object result = cmd.ExecuteScalar();
             connection.Close();
-            return res;
+            return (result !=null && result!=DBNull.Value)? Convert.ToInt32(result):0;
         }
         public DataTable GetAllStudents()
         {
-            string conString = "server=.;database=StudentDBTest;integrated security=true";
             using (SqlConnection connection = new SqlConnection(conString))
             {
-                string query = @"SELECT StudentID,
-                                    Name,
-                                    RegistrationNumber,
-                                    Depertment,
-                                    Age,
-                                    Address
-                             FROM Students";
+                string query = @"spGetStudents";
                 SqlDataAdapter da = new SqlDataAdapter(query, connection);
                 DataTable dt = new DataTable();
                 da.Fill(dt);
                 return dt;
+            }
+        }
+        public DataTable GetStudentById(int studentId)
+        {
+            using (SqlConnection connection = new SqlConnection(conString))
+            {
+                string query = @"spGetStudents";
+                using (SqlCommand cmd = new SqlCommand(query, connection))
+                {
+                    cmd.CommandType = CommandType.StoredProcedure;
+                    cmd.Parameters.AddWithValue("@StudentID", studentId);
+
+                    SqlDataAdapter da = new SqlDataAdapter(cmd);
+                    DataTable dt = new DataTable();
+                    da.Fill(dt);
+                    return dt;
+                }
             }
         }
     }

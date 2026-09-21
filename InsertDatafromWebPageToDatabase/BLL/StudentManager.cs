@@ -14,10 +14,10 @@ namespace InsertDatafromWebPageToDatabase.BLL
         public string SaveStudent (Student student)
         {
             
-            int rowAffect = studentGateway.SaveStudent(student);
-            if (rowAffect > 0)
+            int StudentID = studentGateway.SaveStudent(student);
+            if (StudentID > 0)
             {
-                return "Save Successfully";
+                return StudentID.ToString();
             }
             else
             {
@@ -29,6 +29,10 @@ namespace InsertDatafromWebPageToDatabase.BLL
         {
             return studentGateway.GetAllStudents();
         
+        }
+        public DataTable GetStudentById(int studentId)
+        {
+            return studentGateway.GetStudentById(studentId);
         }
     }
 

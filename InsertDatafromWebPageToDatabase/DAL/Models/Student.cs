@@ -11,7 +11,7 @@ namespace InsertDatafromWebPageToDatabase
         public string RegNo { get; set; }
         public string Name { get; set; }
         public int Age { get; set; }
-        public string Depertment { get; set; }
+        public string Department { get; set; }
         public string Address { get; set; }
     }
 }

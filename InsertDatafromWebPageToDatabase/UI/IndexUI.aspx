@@ -68,7 +68,7 @@
                     <asp:BoundField DataField="StudentID" HeaderText="Student ID" />
                     <asp:BoundField DataField="Name" HeaderText="Name" />
                     <asp:BoundField DataField="RegistrationNumber" HeaderText="Registration Number" />
-                    <asp:BoundField DataField="Depertment" HeaderText="Depertment" />
+                    <asp:BoundField DataField="Department" HeaderText="Depertment" />
                     <asp:BoundField DataField="Age" HeaderText="Age" />
                     <asp:BoundField DataField="Address" HeaderText="Address" />
                 </Columns>
