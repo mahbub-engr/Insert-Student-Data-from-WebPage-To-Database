@@ -4,12 +4,13 @@ using System.Data;
 using System.Data.SqlClient;
 using System.Linq;
 using System.Web;
+using System.Web.Configuration;
 
 namespace InsertDatafromWebPageToDatabase.DAL.Gateway
 {
     public class StudentGateway
     {
-        private string conString = "server=.;database=StudentDBTest;integrated security=true";
+        private string conString = WebConfigurationManager.ConnectionStrings["StudentDBTestConString"].ConnectionString; // connection string from web.config file
         public int SaveStudent(Student student)
         {
 
